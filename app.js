@@ -55,7 +55,7 @@ function playerPlay() {
   //let playerInput;
 
   do {
-    console.log("do loop");
+    //console.log("do loop");
     const playerInput = window.prompt("What do you choose to play (rock, paper, or scissors)?");
     if (playerInput === null) {
       isGameOver = true;
@@ -79,7 +79,7 @@ function playerPlay() {
 
     } else {
       alert("Please enter a valid choice (rock, paper, or scissors)");
-      console.log("player input error");
+      //console.log("player input error");
     }
   } while(!playerInputValid);
 }
