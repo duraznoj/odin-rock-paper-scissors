@@ -4,40 +4,114 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./app.js" defer></script>
   <style>
 
     * {
       font-family:Arial, Helvetica, sans-serif;
     }
 
+    #container {
+      display: flex;
+      flex-direction: column;
+      /*width: 90%;
+      height: 85vh;*/
+    }
+
+    header {
+      font-size: 1.5rem;
+      /*font-weight: bold;*/
+      text-align: center;
+
+    }
+
     ul {
       display: flex;
       flex-direction: column;
       list-style: none;
-      gap: 10px;
+      gap: 3px;
     }
 
 
     li {
       text-decoration: none;
+      /*transition: all .07s ease;*/
+      /*transition: transform .07s ease, border-color .07s ease, box-shadow .07s ease, justify-content .07s ease;*/
+    }
+
+    .playerWon, .computerWon, .tie {
+      /*font-weight: bold;*/
     }
 
     .playerWon {
-      background-color: rgb(108, 169, 108);
+      background-color: rgb(177, 208, 177);
     }
 
     .tie {
-      background-color: rgb(160, 206, 212);
+      background-color: rgb(182, 211, 215);
     }
 
     .computerWon {
-      background-color: rgb(196, 140, 140);
+      background-color: rgb(213, 184, 184);
     }
 
-    .gameOver {
-      font-size: 18px;
+    #gameOver {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2%;
+    }
+
+    #gameOverText{
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .numWins {
+      /*transform: scale(1.1);*/
+      border-color: #ffc600;
+      box-shadow: 0 0 1rem #ffc600;
+      justify-content: center;
+    }
+
+    #buttons {
+      display: flex;
+      justify-content: center;
+      align-items: space-between;
+      padding: 2%;
+      gap: 12%;
+    }
+
+    button {
+      font-size: 1.5rem;
+    }
+
+    .scoreVal {
       font-weight: bold;
     }
+
+    #tableContainer {
+      display: flex;
+      justify-content: center;
+      align-items: space-between;
+    }
+
+    table {
+      width: 60%;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+    }
+
+    td {
+      text-align: center;
+    }
+
+    
+
+
     
   </style>
 
@@ -45,13 +119,43 @@
 
 </head>
 <body>
-  <ul>
-    <!--li class="playerChoice"></li>
-    <li class="computerChoice"></li>
-    <li class="results"></li-->
-  </ul>
-  
-  <script src="./app.js"></script>
+  <div id="container">
+    <header>
+      <h1>ROCK, PAPER, SCISSORS: HUMAN VS. COMPUTER</h1>
+      <h3>Click on one of the buttons below to start playing:</h3>
+    </header>
 
+    <div id="buttons">
+      <button id="ROCK">ROCK</button>
+      <button id="PAPER">PAPER</button>
+      <button id="SCISSORS">SCISSORS</button>
+    </div>
+
+    <div id="tableContainer">
+      <table>
+        <tr>
+          <th>PLAYER SCORE</th>
+          <th>COMPUTER SCORE</th>
+        </tr>
+        <tr>
+          <td class="scoreVal" id="playerScoreValue"></td>
+          <td class="scoreVal" id="computerScoreValue"></td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="gameOver">
+      <div id="gameOverText"></div>
+    </div>
+
+
+    <ul>
+      <!--li class="playerChoice"></li>
+      <li class="computerChoice"></li>
+      <li class="results"></li-->
+    </ul>
+
+  </div>
+  
 </body>
 </html>
