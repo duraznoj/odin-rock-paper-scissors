@@ -11,60 +11,73 @@ let resultClass;
 let numPlayerWins = 0;
 let numComputerWins = 0;
 const numRounds = 5;
-
+const numPoints = 5;
+let finalText;
+let finalClass;
 
 //get DOM elements
-const buttons = document.querySelectorAll("button");
+const container = document.querySelector(".container");
+const choiceButtons = document.querySelectorAll(".choiceButtons > *");
 const playerScoreVal = document.querySelector("#playerScoreValue");
 const computerScoreVal = document.querySelector("#computerScoreValue");
-const gameOverElement = document.querySelector("#gameOverText");
+const gameActionElem = document.querySelector(".gameAction");
+const resultTextElem =  document.querySelector("#resultText");
+const playerChoiceElem = document.querySelector("#playerChoice");
+const computerChoiceElem = document.querySelector("#computerChoice");
+const modal = document.querySelector(".modal");
+const modalContent = document.querySelector("#modalContent");
+const finalResultText = document.querySelector("#finalResult");
+const finalScoreText = document.querySelector("#finalScore");
+const restartButton = document.querySelector("#restartButton");
 
-
-//function to create list node element and add it to the DOM
-function createElementDOM(elementName, elementText, elementType) {
-  const listElement = document.createElement("li-" + elementName + "-" + currentRound);
-  const textNode = document.createTextNode(elementText);
-  listElement.appendChild(textNode);
-
-  if(elementType) {
-    listElement.classList.add("numWins");
-  };
-
-  document.querySelector("ul").appendChild(listElement);
-  return listElement;
+//function to reset values
+const initGameState = () => {
+  currentRound = 0;
+  isGameOver = false;
+  playerInputValid = false;
+  result = "";
+  resultClass = "";
+  numPlayerWins = 0;
+  numComputerWins = 0;
+  playerScoreVal.textContent = numPlayerWins;
+  computerScoreVal.textContent = numComputerWins;
+  finalText = "";
+  finalClass = "";
 }
 
 //function to randomly select computer choice
 function computerPlay() {
   const randIdx = Math.floor((Math.random() * 300) / 100);
   const computerChoice = OPTIONS_ARRAY[randIdx];
-  const computerSelector = createElementDOM("computerChoice", "Computer choice: " + computerChoice.toUpperCase());
   return computerChoice;
 }
 
 //function to determine results
 function playRound(playerSelection, computerSelection) {
+  playerChoiceElem.textContent = `Player chose ${playerSelection}`;
+  computerChoiceElem.textContent = `Computer chose ${computerSelection}`;
 
   if (playerSelection === computerSelection) {
     result = "TIE";
-    resultClass = "tie";
+    resultClass = "tieText";
   } else {
     const firstPlayerMatch = OPTIONS_ARRAY.indexOf(playerSelection);
     const firstComputerMatch = OPTIONS_ARRAY.indexOf(computerSelection);
     const matchDiff = firstPlayerMatch - firstComputerMatch;
     if(matchDiff === 1 || matchDiff === -2) {
       result = `You Win! ${playerSelection.toUpperCase()} beats ${computerSelection.toUpperCase()}`;
-      resultClass = "playerWon";
+      resultClass = "playerWonText";
       numPlayerWins++;
     } else {
       result = `You Lose! ${computerSelection.toUpperCase()} beats ${playerSelection.toUpperCase()}`;
-      resultClass = "computerWon";
+      resultClass = "computerWonText";
       numComputerWins++;
     }
   }
 
-  const resultSelector = createElementDOM("result", `Round #${currentRound+1} Result: ${result}`);
-  resultSelector.classList.add(resultClass);
+  resultTextElem.textContent = `Round #${currentRound+1} Result: ${result}`;
+  resultTextElem.removeAttribute("class");
+  resultTextElem.classList.add(resultClass);
   return result;
 }
 
@@ -72,30 +85,44 @@ function playRound(playerSelection, computerSelection) {
 playerScoreVal.textContent = numPlayerWins;
 computerScoreVal.textContent = numComputerWins;
 
-buttons.forEach(btn => {
+restartButton.addEventListener('click', () => {
+  initGameState();
+  container.classList.remove("is-blurred");
+  modal.style.display = "none";
+  modalContent.removeAttribute("class");
+  resultTextElem.textContent = "";
+  playerChoiceElem.textContent = "";
+  computerChoiceElem.textContent = "";
+  resultTextElem.removeAttribute("class");
+})
+
+choiceButtons.forEach(btn => {
   btn.addEventListener('click', () => {
 
-    if(currentRound < numRounds) {
-      const playerSelector = createElementDOM("playerChoice", "Player choice: " + btn.id);
+      if(numPlayerWins <= numPoints && numComputerWins <= numPoints) {
       playRound(btn.id, computerPlay());
       
       playerScoreVal.textContent = numPlayerWins;
       computerScoreVal.textContent = numComputerWins;
 
-      if(currentRound == numRounds - 1) {
-        
-        let finalText = "";
+      if(numPlayerWins === numPoints || numComputerWins === numPoints) {
 
         if(numPlayerWins > numComputerWins) {
           finalText = "Player won more games!";
+          finalClass = "playerWonBG";
         } else if(numPlayerWins < numComputerWins) {
           finalText = "Computer won more games!";
+          finalClass = "computerWonBG";
         } else if(numPlayerWins === numComputerWins) {
           finalText = "It's a tie!";
+          finalClass = "tieBG";
         } 
 
-        gameOverElement.textContent = finalText;
-
+        finalScoreText.textContent = `Player won ${numPlayerWins}, Computer won ${numComputerWins}`;
+        finalResultText.textContent = finalText;
+        modalContent.classList.add(finalClass);
+        container.classList.add("is-blurred")
+        modal.style.display = "block";
       }
 
       currentRound++;

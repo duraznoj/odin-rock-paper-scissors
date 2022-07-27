@@ -5,77 +5,105 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="./app.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Eczar:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
 
     * {
-      font-family:Arial, Helvetica, sans-serif;
+      font-family: 'Eczar', serif;
     }
 
-    #container {
+    body {
+      background-color: gainsboro;
+      margin: 0%;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .container {
       display: flex;
       flex-direction: column;
-      /*width: 90%;
-      height: 85vh;*/
+      align-items: space-between;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .gameAction {
+      flex: 1 100%;
+    }
+
+    .header, .tableContainer, .choiceButtons, .footer {
+      flex: 1, 75%;
     }
 
     header {
-      font-size: 1.5rem;
-      /*font-weight: bold;*/
+      font-size: 1rem;
+      font-weight: 700;
       text-align: center;
-
     }
 
-    ul {
+    .playerWonText {
+      text-shadow: 2px 2px 4px rgb(123, 177, 156);
+    }
+
+    .tieText {
+      text-shadow: 1px 1px 2px rgb(122, 163, 182);
+    }
+
+    .computerWonText {
+      text-shadow: 1px 1px 2px rgb(163, 119, 116);
+    }
+
+
+    .playerWonBG {
+      background-color: rgb(115, 148, 115);
+    }
+
+    .tieBG {
+      background-color: rgb(150, 175, 178);
+    }
+
+    .computerWonBG {
+      background-color: rgb(155, 121, 121);
+    }
+
+
+    .gameAction {
       display: flex;
       flex-direction: column;
-      list-style: none;
-      gap: 3px;
-    }
-
-
-    li {
-      text-decoration: none;
-      /*transition: all .07s ease;*/
-      /*transition: transform .07s ease, border-color .07s ease, box-shadow .07s ease, justify-content .07s ease;*/
-    }
-
-    .playerWon, .computerWon, .tie {
-      /*font-weight: bold;*/
-    }
-
-    .playerWon {
-      background-color: rgb(177, 208, 177);
-    }
-
-    .tie {
-      background-color: rgb(182, 211, 215);
-    }
-
-    .computerWon {
-      background-color: rgb(213, 184, 184);
-    }
-
-    #gameOver {
-      display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 2%;
+      align-items: space-around;
+      gap: 10%;
+      padding: 3% 20% 0% 20%;
     }
 
-    #gameOverText{
+    .gameAction > * {      
       font-size: 1.5rem;
       font-weight: bold;
       text-align: center;
+      flex: 1 100%;
+      margin: 0%;
     }
 
-    .numWins {
-      /*transform: scale(1.1);*/
-      border-color: #ffc600;
-      box-shadow: 0 0 1rem #ffc600;
+    #choices {
+      display: flex;
+      text-align: center;
+      align-items: center;
       justify-content: center;
+      gap: 20%;
+      max-height: 30%;
+      margin: 0%;
+      font-size: 1.2rem;
     }
 
-    #buttons {
+    #resultText {
+      font-size: 2rem;
+    }
+
+    .choiceButtons {
       display: flex;
       justify-content: center;
       align-items: space-between;
@@ -91,10 +119,12 @@
       font-weight: bold;
     }
 
-    #tableContainer {
+    .tableContainer {
       display: flex;
       justify-content: center;
       align-items: space-between;
+      padding: 3% 0% 0% 0%;
+
     }
 
     table {
@@ -109,9 +139,35 @@
       text-align: center;
     }
 
-    
+    .modal {
+      z-index: 2;
+      display: none;
+      top: 25%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      width: 70%;
+      max-width: 500px;
+      position: absolute;
+      border-radius: 2%;
+      text-align: center;
+    }
 
+    .is-blurred {
+      filter: blur(2px);
+      -webkit-filter: blur(2px);
+    }
 
+    .header, .footer {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    #headerText, #footerText {
+      height: 100%;
+      text-align: center;
+    }
     
   </style>
 
@@ -119,21 +175,25 @@
 
 </head>
 <body>
-  <div id="container">
-    <header>
-      <h1>ROCK, PAPER, SCISSORS: HUMAN VS. COMPUTER</h1>
-      <h3>Click on one of the buttons below to start playing:</h3>
-    </header>
+  <div class="container">
+    <div class="header">
+      <div id="headerText">
+        <h1>ROCK, PAPER, SCISSORS: HUMAN VS. COMPUTER</h1>
+        <h3>Click on one of the buttons below to start playing:</h3>
+      </div>
+      
+    </div>
 
-    <div id="buttons">
+    <div class="choiceButtons">
       <button id="ROCK">ROCK</button>
       <button id="PAPER">PAPER</button>
       <button id="SCISSORS">SCISSORS</button>
     </div>
 
-    <div id="tableContainer">
+    <div class="tableContainer">
       <table>
         <tr>
+          <thead><tr><td colspan="2">First player to reach 5 wins is crowned the victor!</td></tr></thead>
           <th>PLAYER SCORE</th>
           <th>COMPUTER SCORE</th>
         </tr>
@@ -144,18 +204,31 @@
       </table>
     </div>
 
-    <div id="gameOver">
-      <div id="gameOverText"></div>
+    <div class="gameAction">
+      <div id="choices">
+        <h3 id="playerChoice"></h3>
+        <h3 id ="computerChoice"></h3>
+      </div>
+      <h3 id="resultText"></h3>
     </div>
 
-
-    <ul>
-      <!--li class="playerChoice"></li>
-      <li class="computerChoice"></li>
-      <li class="results"></li-->
-    </ul>
+    <div class="footer">
+      <div id="footerText">
+        <h4>Created by @duraznoj</h4>
+      </div>
+    </div>
 
   </div>
+
+  <div class="modal">
+    <div id="modalContent">
+      <h1>Game Over!</h1>
+      <h1 id="finalScore"></h1>
+      <h1 id="finalResult"></h1>
+      <button id="restartButton">RESTART</button>
+    </div>
+  </div>
+
   
 </body>
 </html>
